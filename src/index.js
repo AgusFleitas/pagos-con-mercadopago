@@ -1,11 +1,14 @@
 import express from "express";
+import cors from 'cors'
 import paymentRoutes from "./routes/payment.routes.js";
 import { PORT } from "./config.js";
 
 // Inicializamos nuestra app ejecutando Express.
 const app = express();
 
+app.use(cors());
 app.use(express.json());
+
 
 // Rutas del pago.
 app.use(paymentRoutes);

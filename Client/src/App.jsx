@@ -1,35 +1,85 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+import { initMercadoPago, Wallet } from "@mercadopago/sdk-react";
+import axios from "axios";
+
+import image from "./assets/ORH8S60.jpg";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [preferenceId, setPreferenceId] = useState(null);
+  console.log(preferenceId);
+
+  const publicKey = import.meta.env.VITE_PUBLIC_KEY_TEST;
+
+  initMercadoPago(publicKey, {
+    locale: "es-AR",
+  });
+
+  const createPreference = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/create-preference",
+        {
+          products: [
+            {
+              title: "Smartphone Android v24",
+              quantity: 1,
+              price: 5000,
+              currency: "ARS",
+            },
+          ],
+        }
+      );
+
+      const { id } = response.data;
+      return id;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleBuy = async () => {
+    const id = await createPreference();
+    if (id) {
+      setPreferenceId(id);
+    }
+  };
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
+      <h1>
+        Prueba de Mercado<span className='pago-word'>Pago</span>
+      </h1>
+      <div className='card-container'>
+        <strong>Smartphone Android v24</strong>
+        <img src={image} alt='Foto de un smartphone con un fondo blanco' />
         <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
+          Precio: <strong>$10.000</strong>
         </p>
+        <div className='quantity-container'>
+          <p>Cantidad:</p>
+          <div className='buttons'>
+            <button>-</button>
+            <input
+              type='number'
+              name='quantity'
+              id='quantity'
+              defaultValue={1}
+            />
+            <button>+</button>
+          </div>
+        </div>
+        <button className='pay-button' onClick={handleBuy}>
+          Pagar
+        </button>
+        {preferenceId && (
+          <Wallet
+            initialization={{ preferenceId: preferenceId }}
+            customization={{ texts: { valueProp: "smart_option" } }}
+          />
+        )}
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
