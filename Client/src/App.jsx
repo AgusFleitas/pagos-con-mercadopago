@@ -1,14 +1,16 @@
-import { useState } from "react";
-import { initMercadoPago, Wallet } from "@mercadopago/sdk-react";
 import axios from "axios";
-
 import image from "./assets/ORH8S60.jpg";
+
+import { useState, useRef } from "react";
+import { initMercadoPago, Wallet } from "@mercadopago/sdk-react";
 
 function App() {
   const [preferenceId, setPreferenceId] = useState(null);
-  console.log(preferenceId);
 
-  const publicKey = import.meta.env.VITE_PUBLIC_KEY_TEST;
+  // const publicKey = import.meta.env.VITE_PUBLIC_KEY_TEST
+  const publicKey = import.meta.env.VITE_PUBLIC_KEY;
+
+  const paymentField = useRef(null)
 
   initMercadoPago(publicKey, {
     locale: "es-AR",
@@ -21,10 +23,12 @@ function App() {
         {
           products: [
             {
-              title: "Smartphone Android v24",
+              name: "Smartphone Android v24",
               quantity: 1,
-              price: 5000,
+              price: 12,
               currency: "ARS",
+              description: 'Smartphone Android v24, 2 GB RAM, 256 GB memory, 48px cam',
+              image: null
             },
           ],
         }
@@ -41,6 +45,22 @@ function App() {
     const id = await createPreference();
     if (id) {
       setPreferenceId(id);
+    }
+  };
+
+  const getPaymentInfo = async (e) => {
+    e.preventDefault()
+    const id = paymentField.current.value
+
+    try {
+      const response = await axios.post("http://localhost:3000/get-payment", {
+        paymentID: id,
+      });
+
+      console.log(response.data);
+    } catch (error) {
+      console.log('No se ha podido encontrar la operación con ese número ❌');
+      console.log(error);
     }
   };
 
@@ -73,10 +93,23 @@ function App() {
         </button>
         {preferenceId && (
           <Wallet
-            initialization={{ preferenceId: preferenceId }}
+            initialization={{ preferenceId: preferenceId, redirectMode: "blank" }}
             customization={{ texts: { valueProp: "smart_option" } }}
           />
         )}
+      </div>
+      <div>
+        <h3>Obtener información del pago</h3>
+        <form>
+          <input
+            type='text'
+            name='paymentnum'
+            id='paymentnum'
+            placeholder='Ingresa tu número de operación'
+            ref={paymentField}
+          />
+          <button type="submit" onClick={getPaymentInfo}>Obtener información</button>
+        </form>
       </div>
     </>
   );
