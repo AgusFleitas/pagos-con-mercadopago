@@ -18,8 +18,8 @@ importers:
         specifier: ^4.19.2
         version: 4.19.2
       mercadopago:
-        specifier: ^2.0.9
-        version: 2.0.9
+        specifier: ^2.0.11
+        version: 2.0.11
 
 packages:
 
@@ -167,8 +167,8 @@ packages:
     resolution: {integrity: sha512-dq+qelQ9akHpcOl/gUVRTxVIOkAJ1wR3QAvb4RsVjS8oVoFjDGTc679wJYmUmknUF5HwMLOgb5O+a3KxfWapPQ==}
     engines: {node: '>= 0.6'}
 
-  mercadopago@2.0.9:
-    resolution: {integrity: sha512-Dee6JXeJbf9xCYlO/Wr+5koY1LP8mN+YeY7hX8mtZiYdVtITE/Qfxf+nz+BVMgG6RTnYKrcNUbERmqMy6nSpxg==}
+  mercadopago@2.0.11:
+    resolution: {integrity: sha512-jK/cqjNqBwSrxl1WrQ9UDwoy3BcFuHG3CKKa5EpQhqQyAbfIf2QjIs01Gw65v+94tL4brTrFgb1Ad8PSSCVPRQ==}
 
   merge-descriptors@1.0.1:
     resolution: {integrity: sha512-cCi6g3/Zr1iqQi6ySbseM1Xvooa98N0w31jzUYrXPX2xqObmFGHJ0tQ5u74H3mVh7wLouTseZyYIq39g8cNp1w==}
@@ -482,7 +482,7 @@ snapshots:
 
   media-typer@0.3.0: {}
 
-  mercadopago@2.0.9:
+  mercadopago@2.0.11:
     dependencies:
       node-fetch: 2.7.0
       uuid: 9.0.1
